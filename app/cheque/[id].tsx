@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { AppButton } from '@/components/AppButton';
+import { ChequeImagePreview } from '@/components/cheques/ChequeImagePreview';
 import { DetailRow } from '@/components/DetailRow';
 import { Screen } from '@/components/Screen';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -79,6 +80,10 @@ export default function ChequeDetailScreen() {
       <DetailRow label="Date d'échéance" value={formatDisplayDate(cheque.dueDate)} />
       <DetailRow label="Statut" value={cheque.status} />
       <DetailRow label="Note" value={cheque.note || 'Aucune note'} />
+      <View style={styles.imageSection}>
+        <ThemedText type="subtitle">Image du chèque</ThemedText>
+        <ChequeImagePreview imagePath={cheque.imagePath} height={260} />
+      </View>
       <DetailRow label="Créé le" value={formatDisplayDate(cheque.createdAt, true)} />
       <DetailRow label="Mis à jour le" value={formatDisplayDate(cheque.updatedAt, true)} />
     </Screen>
@@ -103,5 +108,8 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     gap: 12,
+  },
+  imageSection: {
+    gap: 10,
   },
 });

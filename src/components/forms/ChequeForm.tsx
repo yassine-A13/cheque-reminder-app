@@ -4,6 +4,7 @@ import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { AppButton } from '@/components/AppButton';
 import { AppInput } from '@/components/AppInput';
+import { ChequeImageField } from '@/components/cheques/ChequeImageField';
 import { FilterChip } from '@/components/FilterChip';
 import { ThemedText } from '@/components/ThemedText';
 import { ChequeInput, ChequeStatus } from '@/core/types/cheque';
@@ -35,6 +36,7 @@ export function ChequeForm({ initialValues, submitLabel, onSubmit }: ChequeFormP
     dueDate: toIsoDate(initialValues?.dueDate),
     status: initialValues?.status ?? 'En cours',
     note: initialValues?.note ?? '',
+    imagePath: initialValues?.imagePath ?? null,
   });
   const [showPicker, setShowPicker] = useState<DateField>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -161,6 +163,12 @@ export function ChequeForm({ initialValues, submitLabel, onSubmit }: ChequeFormP
         placeholder="Commentaire interne"
         multiline
         style={styles.multiline}
+      />
+
+      <ChequeImageField
+        value={form.imagePath}
+        originalValue={initialValues?.imagePath ?? null}
+        onChange={(imagePath) => setForm((current) => ({ ...current, imagePath }))}
       />
 
       {showPicker ? (

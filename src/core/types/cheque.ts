@@ -13,6 +13,7 @@ export type Cheque = {
   dueDate: string;
   status: ChequeStatus;
   note?: string | null;
+  imagePath?: string | null;
   notificationId?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -45,6 +46,7 @@ export const CHEQUE_FIELD_LABELS: Record<keyof Omit<Cheque, 'id' | 'notification
   dueDate: "Date d'échéance",
   status: 'Statut',
   note: 'Note',
+  imagePath: 'Image du chèque',
   createdAt: 'Créé le',
   updatedAt: 'Mis à jour le',
 };

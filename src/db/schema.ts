@@ -14,6 +14,7 @@ async function createChequeTable() {
       dueDate TEXT NOT NULL,
       status TEXT NOT NULL,
       note TEXT,
+      imagePath TEXT,
       notificationId TEXT,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
@@ -27,6 +28,18 @@ async function createChequeTable() {
   `);
 }
 
+async function ensureChequeImageColumn() {
+  const db = await getDatabase();
+  const columns = (await db.getAllAsync(`PRAGMA table_info(cheques)`)) as Array<Record<string, unknown>>;
+  const hasImagePath = columns.some((column) => String(column.name) === 'imagePath');
+
+  if (!columns.length || hasImagePath) {
+    return;
+  }
+
+  await db.execAsync('ALTER TABLE cheques ADD COLUMN imagePath TEXT;');
+}
+
 async function migrateLegacyChequeTableIfNeeded() {
   const db = await getDatabase();
   const columns = (await db.getAllAsync(`PRAGMA table_info(cheques)`)) as Array<Record<string, unknown>>;
@@ -38,6 +51,7 @@ async function migrateLegacyChequeTableIfNeeded() {
 
   const idColumn = columns.find((column) => String(column.name) === 'id');
   const isLegacyTextId = String(idColumn?.type ?? '').toUpperCase() === 'TEXT';
+  const hasLegacyImagePath = columns.some((column) => String(column.name) === 'imagePath');
 
   if (!isLegacyTextId) {
     return;
@@ -55,17 +69,18 @@ async function migrateLegacyChequeTableIfNeeded() {
       dueDate TEXT NOT NULL,
       status TEXT NOT NULL,
       note TEXT,
+      imagePath TEXT,
       notificationId TEXT,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
     );
     INSERT INTO cheques (
       beneficiary, amount, chequeNumber, bank, issueDate, dueDate,
-      status, note, notificationId, createdAt, updatedAt
+      status, note, imagePath, notificationId, createdAt, updatedAt
     )
     SELECT
       beneficiary, amount, chequeNumber, bank, issueDate, dueDate,
-      status, note, notificationId, createdAt, updatedAt
+      status, note, ${hasLegacyImagePath ? 'imagePath' : 'NULL'}, notificationId, createdAt, updatedAt
     FROM cheques_legacy
     ORDER BY datetime(createdAt) ASC;
     DROP TABLE cheques_legacy;
@@ -82,4 +97,5 @@ export async function initializeDatabase() {
   const db = await getDatabase();
   await db.execAsync('PRAGMA journal_mode = WAL;');
   await migrateLegacyChequeTableIfNeeded();
+  await ensureChequeImageColumn();
 }

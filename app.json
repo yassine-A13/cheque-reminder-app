@@ -26,6 +26,9 @@
       "permissions": [
         "USE_BIOMETRIC",
         "USE_FINGERPRINT",
+        "POST_NOTIFICATIONS",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
         "POST_NOTIFICATIONS"
       ],
       "edgeToEdgeEnabled": true,
@@ -43,6 +46,13 @@
           "color": "#0F766E"
         }
       ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Autoriser l'accès aux images pour associer une photo au chèque.",
+          "cameraPermission": "Autoriser l'accès à la caméra pour photographier un chèque."
+        }
+      ],
       "expo-secure-store",
       "expo-sqlite"
     ],
@@ -54,6 +64,12 @@
       "eas": {
         "projectId": "f76baf3f-67aa-41a3-b0b9-b86a7d1556c6"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f76baf3f-67aa-41a3-b0b9-b86a7d1556c6"
     }
   }
 }

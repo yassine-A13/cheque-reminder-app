@@ -8,6 +8,7 @@ import {
   SortDirection,
 } from '@/core/types/cheque';
 import { getDatabase } from '@/db/client';
+import { deleteChequeImageIfManaged } from '@/features/cheques/image-service';
 import {
   cancelChequeNotification,
   rescheduleChequeNotification,
@@ -34,6 +35,7 @@ function rowToCheque(row: Record<string, unknown>): Cheque {
     dueDate: String(row.dueDate),
     status: String(row.status) as ChequeStatus,
     note: row.note ? String(row.note) : null,
+    imagePath: row.imagePath ? String(row.imagePath) : null,
     notificationId: row.notificationId ? String(row.notificationId) : null,
     createdAt: String(row.createdAt),
     updatedAt: String(row.updatedAt),
@@ -152,8 +154,8 @@ export async function createCheque(input: ChequeInput) {
   await db.runAsync(
     `INSERT INTO cheques (
       beneficiary, amount, chequeNumber, bank, issueDate, dueDate,
-      status, note, notificationId, createdAt, updatedAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      status, note, imagePath, notificationId, createdAt, updatedAt
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       input.beneficiary,
       input.amount,
@@ -163,6 +165,7 @@ export async function createCheque(input: ChequeInput) {
       input.dueDate,
       status,
       input.note ?? null,
+      input.imagePath ?? null,
       notificationId,
       now,
       now,
@@ -207,7 +210,7 @@ export async function updateCheque(id: number, input: ChequeInput) {
   await db.runAsync(
     `UPDATE cheques
      SET beneficiary = ?, amount = ?, chequeNumber = ?, bank = ?, issueDate = ?, dueDate = ?,
-         status = ?, note = ?, notificationId = ?, updatedAt = ?
+         status = ?, note = ?, imagePath = ?, notificationId = ?, updatedAt = ?
      WHERE id = ?`,
     [
       input.beneficiary,
@@ -218,11 +221,16 @@ export async function updateCheque(id: number, input: ChequeInput) {
       input.dueDate,
       status,
       input.note ?? null,
+      input.imagePath ?? null,
       notificationId,
       updatedAt,
       id,
     ],
   );
+
+  if (current.imagePath && current.imagePath !== input.imagePath) {
+    await deleteChequeImageIfManaged(current.imagePath);
+  }
 
   const updated = await getChequeById(id);
 
@@ -241,6 +249,7 @@ export async function deleteCheque(id: number) {
   }
 
   await cancelChequeNotification(cheque.notificationId);
+  await deleteChequeImageIfManaged(cheque.imagePath);
   const db = await getDatabase();
   await db.runAsync('DELETE FROM cheques WHERE id = ?', [id]);
 }
@@ -253,8 +262,8 @@ export async function replaceAllCheques(items: Cheque[]) {
     await db.runAsync(
       `INSERT INTO cheques (
         id, beneficiary, amount, chequeNumber, bank, issueDate, dueDate,
-        status, note, notificationId, createdAt, updatedAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        status, note, imagePath, notificationId, createdAt, updatedAt
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         item.id,
         item.beneficiary,
@@ -265,6 +274,7 @@ export async function replaceAllCheques(items: Cheque[]) {
         item.dueDate,
         normalizeStatus(item.status, item.dueDate),
         item.note ?? null,
+        item.imagePath ?? null,
         item.notificationId ?? null,
         item.createdAt,
         item.updatedAt,
