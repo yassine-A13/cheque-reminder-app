@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useAppTheme } from '@/providers/ThemeProvider';
+import { radii, spacing } from '@/constants/design';
 
 function SettingsAction({
   label,
@@ -17,6 +18,7 @@ function SettingsAction({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       activeOpacity={0.88}
       style={[styles.action, { backgroundColor: colors.surface, borderColor: colors.border }]}
       onPress={onPress}
@@ -56,17 +58,18 @@ SettingsCard.Action = SettingsAction;
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderRadius: 20,
-    padding: 18,
-    gap: 16,
+    borderRadius: radii.lg,
+    padding: spacing.md,
+    gap: 12,
   },
   header: {
-    gap: 8,
+    gap: 4,
   },
   action: {
+    minHeight: 48,
     borderWidth: 1,
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: radii.sm,
+    padding: spacing.md,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

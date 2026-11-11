@@ -2,17 +2,19 @@ import { PropsWithChildren } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 
 import { useAppTheme } from '@/providers/ThemeProvider';
+import { typeScale } from '@/constants/design';
 
 type TextProps = PropsWithChildren<{
   style?: StyleProp<TextStyle>;
   type?: 'body' | 'title' | 'subtitle' | 'caption';
+  numberOfLines?: number;
 }>;
 
-export function ThemedText({ children, style, type = 'body' }: TextProps) {
+export function ThemedText({ children, style, type = 'body', numberOfLines }: TextProps) {
   const { colors } = useAppTheme();
 
   return (
-    <Text style={[styles.base, styles[type], { color: colors.text }, style]}>
+    <Text numberOfLines={numberOfLines} style={[styles.base, styles[type], { color: colors.text }, style]}>
       {children}
     </Text>
   );
@@ -20,20 +22,20 @@ export function ThemedText({ children, style, type = 'body' }: TextProps) {
 
 const styles = StyleSheet.create({
   base: {
-    fontSize: 16,
+    fontSize: typeScale.body,
   },
   body: {
-    fontSize: 16,
+    fontSize: typeScale.body,
   },
   title: {
-    fontSize: 28,
+    fontSize: typeScale.title,
     fontWeight: '700',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: typeScale.subtitle,
     fontWeight: '600',
   },
   caption: {
-    fontSize: 13,
+    fontSize: typeScale.caption,
   },
 });

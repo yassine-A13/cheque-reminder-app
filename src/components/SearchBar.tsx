@@ -2,6 +2,7 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useAppTheme } from '@/providers/ThemeProvider';
+import { radii, spacing } from '@/constants/design';
 
 type SearchBarProps = {
   value: string;
@@ -34,16 +35,16 @@ export function SearchBar({ value, onChangeText, onSubmit, placeholder }: Search
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 54,
+    minHeight: 44,
     borderWidth: 1,
-    borderRadius: 18,
-    paddingHorizontal: 14,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
   },
 });

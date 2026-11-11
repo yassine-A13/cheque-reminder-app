@@ -17,8 +17,8 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
   const systemScheme = useColorScheme();
-  const [preference, setPreferenceState] = useState<ThemePreference>('system');
-  const resolvedScheme = preference === 'system' ? systemScheme ?? 'light' : preference;
+  const [preference, setPreferenceState] = useState<ThemePreference>('dark');
+  const resolvedScheme = preference === 'system' ? systemScheme ?? 'dark' : preference;
   const isDark = resolvedScheme === 'dark';
 
   useEffect(() => {

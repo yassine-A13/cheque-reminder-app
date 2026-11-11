@@ -38,10 +38,10 @@ export const lightColors: AppThemeColors = {
 };
 
 export const darkColors: AppThemeColors = {
-  background: '#111827',
-  surface: '#172033',
-  card: '#1F2937',
-  border: '#334155',
+  background: '#0B1220',
+  surface: '#111C2E',
+  card: '#162235',
+  border: '#26364D',
   text: '#F8FAFC',
   textMuted: '#94A3B8',
   primary: '#2DD4BF',

@@ -103,6 +103,20 @@ export async function listCheques(options: ChequeQueryOptions = {}) {
   return rows.map((row) => rowToCheque(row as Record<string, unknown>));
 }
 
+/** Read an export snapshot without syncing or otherwise writing cheque records. */
+export async function listChequesSnapshot(options: ChequeQueryOptions = {}) {
+  const db = await getDatabase();
+  const query = buildListQuery({ ...options, status: 'Tous' });
+  const rows = await db.getAllAsync(query.sql, query.params);
+  const cheques = rows.map((row) => {
+    const cheque = rowToCheque(row as Record<string, unknown>);
+    return { ...cheque, status: normalizeStatus(cheque.status, cheque.dueDate) };
+  });
+  return options.status && options.status !== 'Tous'
+    ? cheques.filter((cheque) => cheque.status === options.status)
+    : cheques;
+}
+
 export async function listRecentCheques(limit = 5) {
   await syncExpiredCheques();
   const db = await getDatabase();
@@ -252,35 +266,6 @@ export async function deleteCheque(id: number) {
   await deleteChequeImageIfManaged(cheque.imagePath);
   const db = await getDatabase();
   await db.runAsync('DELETE FROM cheques WHERE id = ?', [id]);
-}
-
-export async function replaceAllCheques(items: Cheque[]) {
-  const db = await getDatabase();
-  await db.execAsync('DELETE FROM cheques');
-
-  for (const item of items) {
-    await db.runAsync(
-      `INSERT INTO cheques (
-        id, beneficiary, amount, chequeNumber, bank, issueDate, dueDate,
-        status, note, imagePath, notificationId, createdAt, updatedAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        item.id,
-        item.beneficiary,
-        item.amount,
-        item.chequeNumber,
-        item.bank ?? null,
-        item.issueDate,
-        item.dueDate,
-        normalizeStatus(item.status, item.dueDate),
-        item.note ?? null,
-        item.imagePath ?? null,
-        item.notificationId ?? null,
-        item.createdAt,
-        item.updatedAt,
-      ],
-    );
-  }
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {

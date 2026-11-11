@@ -73,8 +73,8 @@ export async function pickChequeImageFromLibrary() {
 
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    quality: 0.8,
+    allowsEditing: false,
+    quality: 1,
   });
 
   if (result.canceled || !result.assets.length) {
@@ -88,8 +88,8 @@ export async function takeChequePhoto() {
   await requestCameraAccess();
 
   const result = await ImagePicker.launchCameraAsync({
-    allowsEditing: true,
-    quality: 0.8,
+    allowsEditing: false,
+    quality: 1,
   });
 
   if (result.canceled || !result.assets.length) {

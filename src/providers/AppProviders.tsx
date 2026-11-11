@@ -1,5 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Screen } from '@/components/Screen';
 import { initializeDatabase } from '@/db/schema';
@@ -34,10 +35,12 @@ function Bootstrap({ children }: PropsWithChildren) {
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Bootstrap>{children}</Bootstrap>
-      </AuthProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Bootstrap>{children}</Bootstrap>
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

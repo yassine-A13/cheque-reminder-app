@@ -1,6 +1,7 @@
 import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
 import { useAppTheme } from '@/providers/ThemeProvider';
+import { radii } from '@/constants/design';
 
 type AppButtonProps = {
   label: string;
@@ -52,14 +53,14 @@ export function AppButton({
 const styles = StyleSheet.create({
   button: {
     minHeight: 52,
-    borderRadius: 16,
+    borderRadius: radii.md,
     paddingHorizontal: 18,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
   },
   compact: {
-    minHeight: 42,
+    minHeight: 44,
     paddingHorizontal: 14,
   },
   label: {

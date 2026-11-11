@@ -1,7 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { SafeAreaView, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAppTheme } from '@/providers/ThemeProvider';
+import { spacing } from '@/constants/design';
 
 type ScreenProps = PropsWithChildren<{
   scrollable?: boolean;
@@ -47,9 +49,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 18,
-    gap: 16,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    gap: spacing.lg,
   },
   centered: {
     justifyContent: 'center',

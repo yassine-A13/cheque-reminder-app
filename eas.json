@@ -5,14 +5,14 @@
   "build": {
     "preview": {
       "distribution": "internal",
-      "node": "20.19.4",
+      "node": "24.14.0",
       "android": {
         "buildType": "apk"
       },
       "channel": "preview"
     },
     "production": {
-      "node": "20.19.4",
+      "node": "24.14.0",
       "android": {
         "buildType": "app-bundle"
       },

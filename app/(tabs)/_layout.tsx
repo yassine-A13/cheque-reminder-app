@@ -3,6 +3,7 @@ import { Redirect, Tabs } from 'expo-router';
 
 import { useAuth } from '@/providers/AuthProvider';
 import { useAppTheme } from '@/providers/ThemeProvider';
+import { ExportFilterProvider } from '@/features/export/ExportFilterContext';
 
 export default function TabsLayout() {
   const { authReady, hasPin, isAuthenticated } = useAuth();
@@ -21,6 +22,7 @@ export default function TabsLayout() {
   }
 
   return (
+    <ExportFilterProvider>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -42,23 +44,42 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Tableau de bord',
-          tabBarIcon: ({ color, size }) => <Ionicons name="grid-outline" size={size} color={color} />,
+          tabBarIcon: ({ focused, size }) => (
+            <Ionicons
+              name="grid-outline"
+              size={size}
+              color={focused ? colors.primary : colors.textMuted}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="cheques"
         options={{
           title: 'Chèques',
-          tabBarIcon: ({ color, size }) => <Ionicons name="receipt-outline" size={size} color={color} />,
+          tabBarIcon: ({ focused, size }) => (
+            <Ionicons
+              name="receipt-outline"
+              size={size}
+              color={focused ? colors.primary : colors.textMuted}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Réglages',
-          tabBarIcon: ({ color, size }) => <Ionicons name="settings-outline" size={size} color={color} />,
+          tabBarIcon: ({ focused, size }) => (
+            <Ionicons
+              name="settings-outline"
+              size={size}
+              color={focused ? colors.primary : colors.textMuted}
+            />
+          ),
         }}
       />
     </Tabs>
+    </ExportFilterProvider>
   );
 }
